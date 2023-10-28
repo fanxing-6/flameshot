@@ -34,11 +34,11 @@ bool verifyLaunchFile()
     bool res = QFile(path).exists();
 #elif defined(Q_OS_WIN)
     QSettings bootUpSettings(
-      "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
-      QSettings::NativeFormat);
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+        QSettings::NativeFormat);
     bool res =
-      bootUpSettings.value("Flameshot").toString() ==
-      QDir::toNativeSeparators(QCoreApplication::applicationFilePath());
+        bootUpSettings.value("Flameshot").toString() ==
+        QDir::toNativeSeparators(QCoreApplication::applicationFilePath());
 #endif
     return res;
 }
@@ -72,122 +72,124 @@ bool verifyLaunchFile()
  */
 // clang-format off
 static QMap<class QString, QSharedPointer<ValueHandler>>
-        recognizedGeneralOptions = {
-//         KEY                            TYPE                 DEFAULT_VALUE
-    OPTION("showHelp"                    ,Bool               ( true          )),
-    OPTION("showSidePanelButton"         ,Bool               ( true          )),
-    OPTION("showDesktopNotification"     ,Bool               ( true          )),
-    OPTION("disabledTrayIcon"            ,Bool               ( false         )),
-    OPTION("historyConfirmationToDelete" ,Bool               ( true          )),
+recognizedGeneralOptions = {
+    //         KEY                            TYPE                 DEFAULT_VALUE
+    OPTION("showHelp", Bool ( true )),
+    OPTION("showSidePanelButton", Bool ( true )),
+    OPTION("showDesktopNotification", Bool ( true )),
+    OPTION("disabledTrayIcon", Bool ( false )),
+    OPTION("historyConfirmationToDelete", Bool ( true )),
 #if !defined(DISABLE_UPDATE_CHECKER)
-    OPTION("checkForUpdates"             ,Bool               ( true          )),
+    OPTION("checkForUpdates", Bool ( true )),
 #endif
-    OPTION("allowMultipleGuiInstances"   ,Bool               ( false         )),
-    OPTION("showMagnifier"               ,Bool               ( false         )),
-    OPTION("squareMagnifier"             ,Bool               ( false         )),
+    OPTION("allowMultipleGuiInstances", Bool ( false )),
+    OPTION("showMagnifier", Bool ( false )),
+    OPTION("squareMagnifier", Bool ( false )),
 #if !defined(Q_OS_WIN)
     OPTION("autoCloseIdleDaemon"         ,Bool               ( false         )),
 #endif
-    OPTION("startupLaunch"               ,Bool               ( false         )),
-    OPTION("showStartupLaunchMessage"    ,Bool               ( true          )),
-    OPTION("copyURLAfterUpload"          ,Bool               ( true          )),
-    OPTION("copyPathAfterSave"           ,Bool               ( false         )),
-    OPTION("antialiasingPinZoom"         ,Bool               ( true          )),
-    OPTION("useJpgForClipboard"          ,Bool               ( false         )),
-    OPTION("uploadWithoutConfirmation"   ,Bool               ( false         )),
-    OPTION("saveAfterCopy"               ,Bool               ( false         )),
-    OPTION("savePath"                    ,ExistingDir        (                   )),
-    OPTION("savePathFixed"               ,Bool               ( false         )),
-    OPTION("saveAsFileExtension"         ,SaveFileExtension  (                   )),
-    OPTION("saveLastRegion"              ,Bool               (false          )),
-    OPTION("uploadHistoryMax"            ,LowerBoundedInt    (0, 25               )),
-    OPTION("undoLimit"                   ,BoundedInt         (0, 999, 100    )),
-  // Interface tab
-    OPTION("uiColor"                     ,Color              ( {116, 0, 150}   )),
-    OPTION("contrastUiColor"             ,Color              ( {39, 0, 50}     )),
-    OPTION("contrastOpacity"             ,BoundedInt         ( 0, 255, 190    )),
-    OPTION("buttons"                     ,ButtonList         ( {}            )),
+    OPTION("startupLaunch", Bool ( false )),
+    OPTION("showStartupLaunchMessage", Bool ( true )),
+    OPTION("copyURLAfterUpload", Bool ( true )),
+    OPTION("copyPathAfterSave", Bool ( false )),
+    OPTION("antialiasingPinZoom", Bool ( true )),
+    OPTION("useJpgForClipboard", Bool ( false )),
+    OPTION("uploadWithoutConfirmation", Bool ( false )),
+    OPTION("saveAfterCopy", Bool ( false )),
+    OPTION("savePath", ExistingDir ( )),
+    OPTION("savePathFixed", Bool ( false )),
+    OPTION("saveAsFileExtension", SaveFileExtension ( )),
+    OPTION("saveLastRegion", Bool (false )),
+    OPTION("uploadHistoryMax", LowerBoundedInt (0, 25 )),
+    OPTION("undoLimit", BoundedInt (0, 999, 100 )),
+    // Interface tab
+    OPTION("uiColor", Color ( {116, 0, 150} )),
+    OPTION("contrastUiColor", Color ( {39, 0, 50} )),
+    OPTION("contrastOpacity", BoundedInt ( 0, 255, 190 )),
+    OPTION("buttons", ButtonList ( {} )),
     // Filename Editor tab
-    OPTION("filenamePattern"             ,FilenamePattern    ( {}            )),
+    OPTION("filenamePattern", FilenamePattern ( {} )),
     // Others
-    OPTION("drawThickness"               ,LowerBoundedInt    (1  , 3             )),
-    OPTION("drawFontSize"                ,LowerBoundedInt    (1  , 8             )),
-    OPTION("drawColor"                   ,Color              ( Qt::red       )),
-    OPTION("userColors"                  ,UserColors(3,        17            )),
-    OPTION("ignoreUpdateToVersion"       ,String             ( ""            )),
-    OPTION("keepOpenAppLauncher"         ,Bool               ( false         )),
-    OPTION("fontFamily"                  ,String             ( ""            )),
+    OPTION("drawThickness", LowerBoundedInt (1 , 3 )),
+    OPTION("drawFontSize", LowerBoundedInt (1 , 8 )),
+    OPTION("drawColor", Color ( Qt::red )),
+    OPTION("userColors", UserColors(3, 17 )),
+    OPTION("ignoreUpdateToVersion", String ( "" )),
+    OPTION("keepOpenAppLauncher", Bool ( false )),
+    OPTION("fontFamily", String ( "" )),
     // PREDEFINED_COLOR_PALETTE_LARGE is defined in src/CMakeList.txt file and can be overwritten in GitHub actions
-    OPTION("predefinedColorPaletteLarge", Bool               ( PREDEFINED_COLOR_PALETTE_LARGE )),
+    OPTION("predefinedColorPaletteLarge",
+           Bool ( PREDEFINED_COLOR_PALETTE_LARGE )),
     // NOTE: If another tool size is added besides drawThickness and
     // drawFontSize, remember to update ConfigHandler::toolSize
-    OPTION("copyOnDoubleClick"           ,Bool               ( false         )),
-    OPTION("uploadClientSecret"          ,String             ( "313baf0c7b4d3ff"            )),
-    OPTION("showSelectionGeometry"  , BoundedInt               (0,5,4)),
-    OPTION("showSelectionGeometryHideTime", LowerBoundedInt       (0, 3000)),
-    OPTION("jpegQuality", BoundedInt     (0,100,75))
+    OPTION("copyOnDoubleClick", Bool ( false )),
+    OPTION("uploadClientSecret", String ( "313baf0c7b4d3ff" )),
+    OPTION("showSelectionGeometry", BoundedInt (0,5,4)),
+    OPTION("showSelectionGeometryHideTime", LowerBoundedInt (0, 3000)),
+    OPTION("jpegQuality", BoundedInt (0,100,75))
 };
 
 static QMap<QString, QSharedPointer<KeySequence>> recognizedShortcuts = {
-//           NAME                           DEFAULT_SHORTCUT
-    SHORTCUT("TYPE_PENCIL"              ,   "P"                     ),
-    SHORTCUT("TYPE_DRAWER"              ,   "D"                     ),
-    SHORTCUT("TYPE_ARROW"               ,   "A"                     ),
-    SHORTCUT("TYPE_SELECTION"           ,   "S"                     ),
-    SHORTCUT("TYPE_RECTANGLE"           ,   "R"                     ),
-    SHORTCUT("TYPE_CIRCLE"              ,   "C"                     ),
-    SHORTCUT("TYPE_MARKER"              ,   "M"                     ),
-    SHORTCUT("TYPE_MOVESELECTION"       ,   "Ctrl+M"                ),
-    SHORTCUT("TYPE_UNDO"                ,   "Ctrl+Z"                ),
-    SHORTCUT("TYPE_COPY"                ,   "Ctrl+C"                ),
-    SHORTCUT("TYPE_SAVE"                ,   "Ctrl+S"                ),
-    SHORTCUT("TYPE_ACCEPT"              ,   "Return"                ),
-    SHORTCUT("TYPE_EXIT"                ,   "Ctrl+Q"                ),
-    SHORTCUT("TYPE_IMAGEUPLOADER"       ,                           ),
+    //           NAME                           DEFAULT_SHORTCUT
+    SHORTCUT("TYPE_PENCIL", "P"),
+    SHORTCUT("TYPE_DRAWER", "D"),
+    SHORTCUT("TYPE_ARROW", "A"),
+    SHORTCUT("TYPE_SELECTION", "S"),
+    SHORTCUT("TYPE_RECTANGLE", "R"),
+    SHORTCUT("TYPE_CIRCLE", "C"),
+    SHORTCUT("TYPE_MARKER", "M"),
+    SHORTCUT("TYPE_MOVESELECTION", "Ctrl+M"),
+    SHORTCUT("TYPE_UNDO", "Ctrl+Z"),
+    SHORTCUT("TYPE_COPY", "Ctrl+C"),
+    SHORTCUT("TYPE_SAVE", "Ctrl+S"),
+    SHORTCUT("TYPE_ACCEPT", "Return"),
+    SHORTCUT("TYPE_EXIT", "Ctrl+Q"),
+    SHORTCUT("TYPE_IMAGEUPLOADER",),
 #if !defined(Q_OS_MACOS)
-    SHORTCUT("TYPE_OPEN_APP"            ,   "Ctrl+O"                ),
+    SHORTCUT("TYPE_OPEN_APP", "Ctrl+O"),
 #endif
-    SHORTCUT("TYPE_PIXELATE"            ,   "B"                     ),
-    SHORTCUT("TYPE_INVERT"              ,   "I"                     ),
-    SHORTCUT("TYPE_REDO"                ,   "Ctrl+Shift+Z"          ),
-    SHORTCUT("TYPE_TEXT"                ,   "T"                     ),
-    SHORTCUT("TYPE_TOGGLE_PANEL"        ,   "Space"                 ),
-    SHORTCUT("TYPE_RESIZE_LEFT"         ,   "Shift+Left"            ),
-    SHORTCUT("TYPE_RESIZE_RIGHT"        ,   "Shift+Right"           ),
-    SHORTCUT("TYPE_RESIZE_UP"           ,   "Shift+Up"              ),
-    SHORTCUT("TYPE_RESIZE_DOWN"         ,   "Shift+Down"            ),
-    SHORTCUT("TYPE_SYM_RESIZE_LEFT"     ,   "Ctrl+Shift+Left"       ),
-    SHORTCUT("TYPE_SYM_RESIZE_RIGHT"    ,   "Ctrl+Shift+Right"      ),
-    SHORTCUT("TYPE_SYM_RESIZE_UP"       ,   "Ctrl+Shift+Up"         ),
-    SHORTCUT("TYPE_SYM_RESIZE_DOWN"     ,   "Ctrl+Shift+Down"       ),
-    SHORTCUT("TYPE_SELECT_ALL"          ,   "Ctrl+A"                ),
-    SHORTCUT("TYPE_MOVE_LEFT"           ,   "Left"                  ),
-    SHORTCUT("TYPE_MOVE_RIGHT"          ,   "Right"                 ),
-    SHORTCUT("TYPE_MOVE_UP"             ,   "Up"                    ),
-    SHORTCUT("TYPE_MOVE_DOWN"           ,   "Down"                  ),
-    SHORTCUT("TYPE_COMMIT_CURRENT_TOOL" ,   "Ctrl+Return"           ),
+    SHORTCUT("TYPE_PIXELATE", "B"),
+    SHORTCUT("TYPE_INVERT", "I"),
+    SHORTCUT("TYPE_REDO", "Ctrl+Shift+Z"),
+    SHORTCUT("TYPE_TEXT", "T"),
+    SHORTCUT("TYPE_TOGGLE_PANEL", "Space"),
+    SHORTCUT("TYPE_RESIZE_LEFT", "Shift+Left"),
+    SHORTCUT("TYPE_RESIZE_RIGHT", "Shift+Right"),
+    SHORTCUT("TYPE_RESIZE_UP", "Shift+Up"),
+    SHORTCUT("TYPE_RESIZE_DOWN", "Shift+Down"),
+    SHORTCUT("TYPE_SYM_RESIZE_LEFT", "Ctrl+Shift+Left"),
+    SHORTCUT("TYPE_SYM_RESIZE_RIGHT", "Ctrl+Shift+Right"),
+    SHORTCUT("TYPE_SYM_RESIZE_UP", "Ctrl+Shift+Up"),
+    SHORTCUT("TYPE_SYM_RESIZE_DOWN", "Ctrl+Shift+Down"),
+    SHORTCUT("TYPE_SELECT_ALL", "Ctrl+A"),
+    SHORTCUT("TYPE_MOVE_LEFT", "Left"),
+    SHORTCUT("TYPE_MOVE_RIGHT", "Right"),
+    SHORTCUT("TYPE_MOVE_UP", "Up"),
+    SHORTCUT("TYPE_MOVE_DOWN", "Down"),
+    SHORTCUT("TYPE_COMMIT_CURRENT_TOOL", "Ctrl+Return"),
 #if defined(Q_OS_MACOS)
     SHORTCUT("TYPE_DELETE_CURRENT_TOOL" ,   "Backspace"             ),
     SHORTCUT("TAKE_SCREENSHOT"          ,   "Ctrl+Shift+X"          ),
     SHORTCUT("SCREENSHOT_HISTORY"       ,   "Alt+Shift+X"           ),
 #else
-    SHORTCUT("TYPE_DELETE_CURRENT_TOOL" ,   "Delete"                ),
+    SHORTCUT("TYPE_DELETE_CURRENT_TOOL", "Delete"),
 #endif
-    SHORTCUT("TYPE_PIN"                 ,                           ),
-    SHORTCUT("TYPE_SELECTIONINDICATOR"  ,                           ),
-    SHORTCUT("TYPE_SIZEINCREASE"        ,                           ),
-    SHORTCUT("TYPE_SIZEDECREASE"        ,                           ),
-    SHORTCUT("TYPE_CIRCLECOUNT"         ,                           ),
+    SHORTCUT("TYPE_PIN",),
+    SHORTCUT("TYPE_SELECTIONINDICATOR",),
+    SHORTCUT("TYPE_SIZEINCREASE",),
+    SHORTCUT("TYPE_SIZEDECREASE",),
+    SHORTCUT("TYPE_CIRCLECOUNT",),
+    SHORTCUT("TYPE_OCR",),
 };
 // clang-format on
 
 // CLASS CONFIGHANDLER
 
 ConfigHandler::ConfigHandler()
-  : m_settings(QSettings::IniFormat,
-               QSettings::UserScope,
-               qApp->organizationName(),
-               qApp->applicationName())
+    : m_settings(QSettings::IniFormat,
+                 QSettings::UserScope,
+                 qApp->organizationName(),
+                 qApp->applicationName())
 {
     static bool firstInitialization = true;
     if (firstInitialization) {
@@ -292,16 +294,16 @@ void ConfigHandler::setStartupLaunch(const bool start)
     }
 #elif defined(Q_OS_WIN)
     QSettings bootUpSettings(
-      "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
-      QSettings::NativeFormat);
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run",
+        QSettings::NativeFormat);
     // set workdir for flameshot on startup
     QSettings bootUpPath(
-      "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App "
-      "Paths",
-      QSettings::NativeFormat);
+        "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App "
+        "Paths",
+        QSettings::NativeFormat);
     if (start) {
         QString app_path =
-          QDir::toNativeSeparators(QCoreApplication::applicationFilePath());
+            QDir::toNativeSeparators(QCoreApplication::applicationFilePath());
         bootUpSettings.setValue("Flameshot", app_path);
 
         // set application workdir
@@ -323,7 +325,7 @@ void ConfigHandler::setStartupLaunch(const bool start)
 void ConfigHandler::setAllTheButtons()
 {
     QList<CaptureTool::Type> buttonlist =
-      CaptureToolButton::getIterableButtonTypes();
+        CaptureToolButton::getIterableButtonTypes();
     setValue(QStringLiteral("buttons"), QVariant::fromValue(buttonlist));
 }
 
@@ -354,7 +356,7 @@ QString ConfigHandler::filenamePatternDefault()
 
 void ConfigHandler::setDefaultSettings()
 {
-    foreach (const QString& key, m_settings.allKeys()) {
+    foreach(const QString& key, m_settings.allKeys()) {
         if (isShortcut(key)) {
             // Do not reset Shortcuts
             continue;
@@ -406,7 +408,7 @@ bool ConfigHandler::setShortcut(const QString& actionName,
                 continue;
             }
             QString existingShortcut =
-              KeySequence().value(m_settings.value(otherAction)).toString();
+                KeySequence().value(m_settings.value(otherAction)).toString();
             if (newShortcut == existingShortcut) {
                 errorFlag = true;
                 goto done;
@@ -602,14 +604,15 @@ bool ConfigHandler::checkShortcutConflicts(AbstractLogger* log) const
                 if (log == nullptr) {
                     break;
                 } else if (!reportedInLog.contains(*key1) && // No duplicate
-                           !reportedInLog.contains(*key2)) { // log entries
+                           !reportedInLog.contains(*key2)) {
+                    // log entries
                     reportedInLog.append(*key1);
                     reportedInLog.append(*key2);
                     *log << tr("Shortcut conflict: '%1' and '%2' "
-                               "have the same shortcut: %3\n")
-                              .arg(*key1)
-                              .arg(*key2)
-                              .arg(value1);
+                                "have the same shortcut: %3\n")
+                            .arg(*key1)
+                            .arg(*key2)
+                            .arg(value1);
                 }
             }
         }
@@ -646,8 +649,8 @@ bool ConfigHandler::checkSemantics(AbstractLogger* log,
             }
             if (log != nullptr) {
                 *log << tr("Bad value in '%1'. Expected: %2\n")
-                          .arg(key)
-                          .arg(valueHandler->expected());
+                        .arg(key)
+                        .arg(valueHandler->expected());
             }
             if (offenders != nullptr) {
                 offenders->append(key);
@@ -695,7 +698,7 @@ void ConfigHandler::setErrorState(bool error) const
         emit getInstance()->error();
     } else if (hadError && !m_hasError) {
         auto msg =
-          tr("You have successfully resolved the configuration error.");
+            tr("You have successfully resolved the configuration error.");
         AbstractLogger::info() << msg;
         emit getInstance()->errorResolved();
     }
@@ -719,7 +722,7 @@ bool ConfigHandler::hasError() const
 QString ConfigHandler::errorMessage() const
 {
     return tr(
-      "The configuration contains an error. Open configuration to resolve.");
+        "The configuration contains an error. Open configuration to resolve.");
 }
 
 void ConfigHandler::ensureFileWatched() const
@@ -746,13 +749,15 @@ void ConfigHandler::ensureFileWatched() const
  * returned.
  */
 QSharedPointer<ValueHandler> ConfigHandler::valueHandler(
-  const QString& key) const
+    const QString& key) const
 {
     QSharedPointer<ValueHandler> handler;
     if (isShortcut(key)) {
         handler = recognizedShortcuts.value(
-          baseName(key), QSharedPointer<KeySequence>(new KeySequence()));
-    } else { // General group
+            baseName(key),
+            QSharedPointer<KeySequence>(new KeySequence()));
+    } else {
+        // General group
         handler = ::recognizedGeneralOptions.value(key);
     }
     return handler;
@@ -765,15 +770,16 @@ QSharedPointer<ValueHandler> ConfigHandler::valueHandler(
  */
 void ConfigHandler::assertKeyRecognized(const QString& key) const
 {
+    qDebug() << key;
     bool recognized = isShortcut(key)
-                        ? recognizedShortcutNames().contains(baseName(key))
-                        : ::recognizedGeneralOptions.contains(key);
+                          ? recognizedShortcutNames().contains(baseName(key))
+                          : ::recognizedGeneralOptions.contains(key);
     if (!recognized) {
 #if defined(QT_DEBUG)
         // This should never happen, but just in case
         throw std::logic_error(
-          tr("Bad config key '%1' in ConfigHandler. Please report "
-             "this as a bug.")
+            tr("Bad config key '%1' in ConfigHandler. Please report "
+                "this as a bug.")
             .arg(key)
             .toStdString());
 #else

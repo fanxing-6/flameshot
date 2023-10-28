@@ -48,7 +48,10 @@ public:
         TYPE_SIZEDECREASE = 21,
         TYPE_INVERT = 22,
         TYPE_ACCEPT = 23,
+        //add ocr type
+        TYPE_OCR = 24,
     };
+
     Q_ENUM(Type);
 
     // Request actions on the main widget
@@ -79,13 +82,16 @@ public:
     };
 
     explicit CaptureTool(QObject* parent = nullptr)
-      : QObject(parent)
-      , m_count(0)
-      , m_editMode(false)
-    {}
+        : QObject(parent)
+          , m_count(0)
+          , m_editMode(false)
+    {
+    }
 
     // TODO unused
-    virtual void setCapture(const QPixmap& pixmap){};
+    virtual void setCapture(const QPixmap& pixmap)
+    {
+    };
 
     // Returns false when the tool is in an inconsistent state and shouldn't
     // be included in the tool undo/redo stack.
@@ -97,6 +103,7 @@ public:
     virtual bool isSelectable() const = 0;
     // Enable mouse preview.
     virtual bool showMousePreview() const = 0;
+
     virtual QRect mousePreviewRect(const CaptureContext& context) const
     {
         return {};
@@ -140,10 +147,12 @@ public:
 
     // Called every time the tool has to draw
     virtual void process(QPainter& painter, const QPixmap& pixmap) = 0;
+
     virtual void drawSearchArea(QPainter& painter, const QPixmap& pixmap)
     {
         process(painter, pixmap);
     };
+
     virtual void drawObjectSelection(QPainter& painter)
     {
         drawObjectSelectionRect(painter, boundingRect());
@@ -167,8 +176,9 @@ protected:
 
     QString iconPath(const QColor& c) const
     {
-        return ColorUtils::colorIsDark(c) ? PathInfo::whiteIconPath()
-                                          : PathInfo::blackIconPath();
+        return ColorUtils::colorIsDark(c)
+                   ? PathInfo::whiteIconPath()
+                   : PathInfo::blackIconPath();
     }
 
     void drawObjectSelectionRect(QPainter& painter, QRect rect)

@@ -175,6 +175,10 @@ target_include_directories(
          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/tools/undo>
          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/tools/sizeincrease>
          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/tools/sizedecrease>
+         
+         # add ocr tool build
+         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/tools/ocr>
+
          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/utils>
          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/widgets>
          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/widgets/panel>

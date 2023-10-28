@@ -36,8 +36,8 @@
 #endif
 
 Flameshot::Flameshot()
-  : m_captureWindow(nullptr)
-  , m_haveExternalWidget(false)
+    : m_captureWindow(nullptr)
+      , m_haveExternalWidget(false)
 #if defined(Q_OS_MACOS)
   , m_HotkeyScreenshotCapture(nullptr)
   , m_HotkeyScreenshotHistory(nullptr)
@@ -77,6 +77,7 @@ Flameshot* Flameshot::instance()
 
 CaptureWidget* Flameshot::gui(const CaptureRequest& req)
 {
+
     if (!resolveAnyConfigErrors()) {
         return nullptr;
     }
@@ -109,7 +110,9 @@ CaptureWidget* Flameshot::gui(const CaptureRequest& req)
         }
         if (0 == timeout) {
             QMessageBox::warning(
-              nullptr, tr("Error"), tr("Unable to close active modal widgets"));
+                nullptr,
+                tr("Error"),
+                tr("Unable to close active modal widgets"));
             return nullptr;
         }
 
@@ -147,7 +150,7 @@ void Flameshot::screen(CaptureRequest req, const int screenNumber)
         screen = qApp->screenAt(globalCursorPos);
     } else if (screenNumber >= qApp->screens().count()) {
         AbstractLogger() << QObject::tr(
-          "Requested screen exceeds screen count");
+            "Requested screen exceeds screen count");
         emit captureFailed();
         return;
     } else {
@@ -244,9 +247,12 @@ void Flameshot::history()
     if (historyWidget == nullptr) {
         historyWidget = new UploadHistory;
         historyWidget->loadHistory();
-        connect(historyWidget, &QObject::destroyed, this, []() {
-            historyWidget = nullptr;
-        });
+        connect(historyWidget,
+                &QObject::destroyed,
+                this,
+                []() {
+                    historyWidget = nullptr;
+                });
     }
     historyWidget->show();
 
@@ -259,7 +265,7 @@ void Flameshot::history()
 QVersionNumber Flameshot::getVersion()
 {
     return QVersionNumber::fromString(
-      QStringLiteral(APP_VERSION).replace("v", ""));
+        QStringLiteral(APP_VERSION).replace("v", ""));
 }
 
 void Flameshot::setOrigin(Origin origin)
@@ -284,21 +290,25 @@ bool Flameshot::resolveAnyConfigErrors()
         !confighandler.checkSemantics()) {
         auto* resolver = new ConfigResolver();
         QObject::connect(
-          resolver, &ConfigResolver::rejected, [resolver, &resolved]() {
-              resolved = false;
-              resolver->deleteLater();
-              if (origin() == CLI) {
-                  exit(1);
-              }
-          });
+            resolver,
+            &ConfigResolver::rejected,
+            [resolver, &resolved]() {
+                resolved = false;
+                resolver->deleteLater();
+                if (origin() == CLI) {
+                    exit(1);
+                }
+            });
         QObject::connect(
-          resolver, &ConfigResolver::accepted, [resolver, &resolved]() {
-              resolved = true;
-              resolver->close();
-              resolver->deleteLater();
-              // Ensure that the dialog is closed before starting capture
-              qApp->processEvents();
-          });
+            resolver,
+            &ConfigResolver::accepted,
+            [resolver, &resolved]() {
+                resolved = true;
+                resolver->close();
+                resolver->deleteLater();
+                // Ensure that the dialog is closed before starting capture
+                qApp->processEvents();
+            });
         resolver->exec();
         qApp->processEvents();
     }
@@ -318,14 +328,17 @@ void Flameshot::requestCapture(const CaptureRequest& request)
             break;
         case CaptureRequest::SCREEN_MODE: {
             int&& number = request.data().toInt();
-            QTimer::singleShot(request.delay(), [this, request, number]() {
-                screen(request, number);
-            });
+            QTimer::singleShot(request.delay(),
+                               [this, request, number]() {
+                                   screen(request, number);
+                               });
             break;
         }
         case CaptureRequest::GRAPHICAL_MODE: {
             QTimer::singleShot(
-              request.delay(), this, [this, request]() { gui(request); });
+                request.delay(),
+                this,
+                [this, request]() { gui(request); });
             break;
         }
         default:
@@ -346,8 +359,8 @@ void Flameshot::exportCapture(const QPixmap& capture,
         QByteArray byteArray;
         QBuffer buffer(&byteArray);
         QTextStream(stdout)
-          << selection.width() << "x" << selection.height() << "+"
-          << selection.x() << "+" << selection.y() << "\n";
+            << selection.width() << "x" << selection.height() << "+"
+            << selection.x() << "+" << selection.y() << "\n";
     }
 
     if (tasks & CR::PRINT_RAW) {
@@ -377,7 +390,7 @@ void Flameshot::exportCapture(const QPixmap& capture,
         FlameshotDaemon::createPin(capture, selection);
         if (mode == CR::SCREEN_MODE || mode == CR::FULLSCREEN_MODE) {
             AbstractLogger::info()
-              << QObject::tr("Full screen screenshot pinned to screen");
+                << QObject::tr("Full screen screenshot pinned to screen");
         }
     }
 
@@ -395,15 +408,18 @@ void Flameshot::exportCapture(const QPixmap& capture,
         // NOTE: lambda can't capture 'this' because it might be destroyed later
         CR::ExportTask tasks = tasks;
         QObject::connect(
-          widget, &ImgUploaderBase::uploadOk, [=](const QUrl& url) {
-              if (ConfigHandler().copyURLAfterUpload()) {
-                  if (!(tasks & CR::COPY)) {
-                      FlameshotDaemon::copyToClipboard(
-                        url.toString(), tr("URL copied to clipboard."));
-                  }
-                  widget->showPostUploadDialog();
-              }
-          });
+            widget,
+            &ImgUploaderBase::uploadOk,
+            [=](const QUrl& url) {
+                if (ConfigHandler().copyURLAfterUpload()) {
+                    if (!(tasks & CR::COPY)) {
+                        FlameshotDaemon::copyToClipboard(
+                            url.toString(),
+                            tr("URL copied to clipboard."));
+                    }
+                    widget->showPostUploadDialog();
+                }
+            });
     }
 
     if (!(tasks & CR::UPLOAD)) {
@@ -415,6 +431,7 @@ void Flameshot::setExternalWidget(bool b)
 {
     m_haveExternalWidget = b;
 }
+
 bool Flameshot::haveExternalWidget()
 {
     return m_haveExternalWidget;
