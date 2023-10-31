@@ -1,5 +1,7 @@
 #pragma once
 
+#include <QString>
+#include <QIcon>
 #include "src/tools/abstractactiontool.h"
 
 class OcrTool : public AbstractActionTool

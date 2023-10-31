@@ -14,6 +14,8 @@
 #include <KSystemClipboard>
 #endif
 
+#include "systemnotification.h"
+
 #include <QApplication>
 #include <QBuffer>
 #include <QClipboard>
@@ -32,7 +34,8 @@ bool saveToFilesystem(const QPixmap& capture,
                       const QString& messagePrefix)
 {
     QString completePath = FileNameHandler().properScreenshotPath(
-      path, ConfigHandler().saveAsFileExtension());
+        path,
+        ConfigHandler().saveAsFileExtension());
     QFile file{ completePath };
     file.open(QIODevice::WriteOnly);
 
@@ -54,7 +57,7 @@ bool saveToFilesystem(const QPixmap& capture,
     if (okay) {
         saveMessage += QObject::tr("Capture saved as ") + completePath;
         AbstractLogger::info().attachNotificationPath(notificationPath)
-          << saveMessage;
+            << saveMessage;
     } else {
         saveMessage += QObject::tr("Error trying to save as ") + completePath;
         if (file.error() != QFile::NoError) {
@@ -62,7 +65,7 @@ bool saveToFilesystem(const QPixmap& capture,
         }
         notificationPath = "";
         AbstractLogger::error().attachNotificationPath(notificationPath)
-          << saveMessage;
+            << saveMessage;
     }
 
     return okay;
@@ -75,7 +78,7 @@ QString ShowSaveFileDialog(const QString& title, const QString& directory)
 
     // Build string list of supported image formats
     QStringList mimeTypeList;
-    foreach (auto mimeType, QImageWriter::supportedMimeTypes()) {
+    foreach(auto mimeType, QImageWriter::supportedMimeTypes()) {
         // image/heif has several aliases and they cause glitch in save dialog
         // It is necessary to keep the image/heif (otherwise HEIF plug-in from
         // kimageformats will not work) but the aliases could be filtered out.
@@ -91,7 +94,7 @@ QString ShowSaveFileDialog(const QString& title, const QString& directory)
         suffix = "png";
     }
     QString defaultMimeType =
-      QMimeDatabase().mimeTypeForFile("image." + suffix).name();
+        QMimeDatabase().mimeTypeForFile("image." + suffix).name();
     dialog.selectMimeTypeFilter(defaultMimeType);
     dialog.setDefaultSuffix(suffix);
     if (dialog.exec() == QDialog::Accepted) {
@@ -113,9 +116,9 @@ void saveToClipboardMime(const QPixmap& capture, const QString& imageType)
 
     QPixmap formattedPixmap;
     bool isLoaded =
-      formattedPixmap.loadFromData(reinterpret_cast<uchar*>(array.data()),
-                                   array.size(),
-                                   imageType.toUpper().toUtf8());
+        formattedPixmap.loadFromData(reinterpret_cast<uchar*>(array.data()),
+                                     array.size(),
+                                     imageType.toUpper().toUtf8());
     if (isLoaded) {
 
         auto* mimeData = new QMimeData();
@@ -133,7 +136,7 @@ void saveToClipboardMime(const QPixmap& capture, const QString& imageType)
 
     } else {
         AbstractLogger::error()
-          << QObject::tr("Error while saving to clipboard");
+            << QObject::tr("Error while saving to clipboard");
     }
 }
 
@@ -168,6 +171,13 @@ void saveToClipboard(const QPixmap& capture)
     }
 }
 
+//±£´æocrÎÄ±¾
+void saveToClipboard(const QString& text)
+{
+    SystemNotification().sendMessage(QObject::tr("Text saved to clipboard"));
+    QApplication::clipboard()->setText(text);
+}
+
 bool saveToFilesystemGUI(const QPixmap& capture)
 {
     bool okay = false;
@@ -176,10 +186,11 @@ bool saveToFilesystemGUI(const QPixmap& capture)
     if (defaultSavePath.isEmpty() || !QDir(defaultSavePath).exists() ||
         !QFileInfo(defaultSavePath).isWritable()) {
         defaultSavePath =
-          QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
+            QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
     }
     QString savePath = FileNameHandler().properScreenshotPath(
-      defaultSavePath, ConfigHandler().saveAsFileExtension());
+        defaultSavePath,
+        ConfigHandler().saveAsFileExtension());
 #if defined(Q_OS_MACOS)
     for (QWidget* widget : qApp->topLevelWidgets()) {
         QString className(widget->metaObject()->className());
@@ -193,7 +204,7 @@ bool saveToFilesystemGUI(const QPixmap& capture)
 #endif
     if (!config.savePathFixed()) {
         savePath = QDir::toNativeSeparators(
-          ShowSaveFileDialog(QObject::tr("Save screenshot"), savePath));
+            ShowSaveFileDialog(QObject::tr("Save screenshot"), savePath));
     }
     if (savePath == "") {
         return okay;
@@ -212,7 +223,7 @@ bool saveToFilesystemGUI(const QPixmap& capture)
 
     if (okay) {
         QString pathNoFile =
-          savePath.left(savePath.lastIndexOf(QDir::separator()));
+            savePath.left(savePath.lastIndexOf(QDir::separator()));
 
         ConfigHandler().setSavePath(pathNoFile);
 
@@ -221,7 +232,8 @@ bool saveToFilesystemGUI(const QPixmap& capture)
 
         if (config.copyPathAfterSave()) {
             FlameshotDaemon::copyToClipboard(
-              savePath, QObject::tr("Path copied to clipboard as ") + savePath);
+                savePath,
+                QObject::tr("Path copied to clipboard as ") + savePath);
         }
 
     } else {
@@ -232,7 +244,9 @@ bool saveToFilesystemGUI(const QPixmap& capture)
         }
 
         QMessageBox saveErrBox(
-          QMessageBox::Warning, QObject::tr("Save Error"), msg);
+            QMessageBox::Warning,
+            QObject::tr("Save Error"),
+            msg);
         saveErrBox.setWindowIcon(QIcon(GlobalValues::iconPath()));
         saveErrBox.exec();
     }

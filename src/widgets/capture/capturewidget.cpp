@@ -305,7 +305,6 @@ void CaptureWidget::initButtons()
 
     auto visibleButtonTypes = m_config.buttons();
 
-
     //TODO：将下面这句代码转移到配置文件处理
     visibleButtonTypes.append(CaptureTool::TYPE_OCR);
 
@@ -321,6 +320,9 @@ void CaptureWidget::initButtons()
             buttonList->removeOne(CaptureTool::TYPE_IMAGEUPLOADER);
             buttonList->removeOne(CaptureTool::TYPE_OPEN_APP);
             buttonList->removeOne(CaptureTool::TYPE_PIN);
+
+            // 移除ocr按钮
+            buttonList->removeOne(CaptureTool::TYPE_OCR);
         }
     }
     QVector<CaptureToolButton*> vectorButtons;
@@ -1344,6 +1346,7 @@ void CaptureWidget::setState(CaptureToolButton* b)
 
 void CaptureWidget::handleToolSignal(CaptureTool::Request r)
 {
+    qDebug() << "handleToolSignal" << r;
     switch (r) {
         case CaptureTool::REQ_CLOSE_GUI:
             close();

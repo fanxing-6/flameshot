@@ -44,6 +44,9 @@ CaptureTool* OcrTool::copy(QObject* parent)
 
 void OcrTool::pressed(CaptureContext& context)
 {
-    Q_UNUSED(context);
+
+    emit requestAction(REQ_CLEAR_SELECTION);
+    emit requestAction(REQ_CAPTURE_DONE_OK);
+    context.request.addTask(CaptureRequest::OCR);
     emit requestAction(REQ_CLOSE_GUI);
 }

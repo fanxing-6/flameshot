@@ -422,6 +422,10 @@ void Flameshot::exportCapture(const QPixmap& capture,
             });
     }
 
+    if (tasks & CR::OCR) {
+        qDebug() << "if (tasks & CR::OCR) ";
+    }
+
     if (!(tasks & CR::UPLOAD)) {
         emit captureTaken(capture);
     }

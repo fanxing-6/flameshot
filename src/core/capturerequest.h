@@ -27,6 +27,8 @@ public:
         PIN = 16,
         UPLOAD = 32,
         ACCEPT_ON_SELECT = 64,
+        // 增加OCR任务
+        OCR = 128,
     };
 
     CaptureRequest(CaptureMode mode,
@@ -58,7 +60,9 @@ private:
     QVariant m_data;
     QRect m_pinWindowGeometry, m_initialSelection;
 
-    CaptureRequest() {}
+    CaptureRequest()
+    {
+    }
 };
 
 using eTask = CaptureRequest::ExportTask;

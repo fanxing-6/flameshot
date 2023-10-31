@@ -14,3 +14,6 @@ QString ShowSaveFileDialog(const QString& title, const QString& directory);
 void saveToClipboardMime(const QPixmap& capture, const QString& imageType);
 void saveToClipboard(const QPixmap& capture);
 bool saveToFilesystemGUI(const QPixmap& capture);
+
+//±£´æÎÄ×Öµ½¼ôÇÐ°å
+void saveToClipboard(const QString& text);
