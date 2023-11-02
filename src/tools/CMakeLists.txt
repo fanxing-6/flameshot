@@ -69,5 +69,4 @@ target_sources(
           toolfactory.h)
 
           # Ìí¼Ó ocr ²¿·Ö
-target_sources(flameshot PRIVATE ocr/ocrtool.h 
-ocr/ocrtool.cpp)
+target_sources(flameshot PRIVATE ocr/ocrtool.h ocr/ocrtool.cpp ocr/ocrbase.h ocr/ocrbase.cpp)

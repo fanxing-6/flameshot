@@ -8,6 +8,7 @@
 #endif
 
 #include "abstractlogger.h"
+#include "ocrbase.h"
 #include "screenshotsaver.h"
 #include "src/config/configresolver.h"
 #include "src/config/configwindow.h"
@@ -423,7 +424,9 @@ void Flameshot::exportCapture(const QPixmap& capture,
     }
 
     if (tasks & CR::OCR) {
-        qDebug() << "if (tasks & CR::OCR) ";
+        OcrBase* ocrBase = new OcrBase(capture);
+        ocrBase->show();
+        ocrBase->activateWindow();
     }
 
     if (!(tasks & CR::UPLOAD)) {
