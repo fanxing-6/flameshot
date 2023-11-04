@@ -8,7 +8,9 @@
 #endif
 
 #include "abstractlogger.h"
-#include "ocrbase.h"
+#include "ocrservicebase.h"
+#include "ocrservicefactory.h"
+#include "ocrwidget.h"
 #include "screenshotsaver.h"
 #include "src/config/configresolver.h"
 #include "src/config/configwindow.h"
@@ -424,9 +426,14 @@ void Flameshot::exportCapture(const QPixmap& capture,
     }
 
     if (tasks & CR::OCR) {
-        OcrBase* ocrBase = new OcrBase(capture);
-        ocrBase->show();
-        ocrBase->activateWindow();
+        OcrServiceBase* ocrService =
+            OcrServiceFactory::createOcrService(OcrServiceFactory::Huawei,
+                                                this);
+        ocrService->requestToken();
+
+        // OcrWidget* weiget = new OcrWidget(capture);
+        // weiget->show();
+        // weiget->activateWindow();
     }
 
     if (!(tasks & CR::UPLOAD)) {

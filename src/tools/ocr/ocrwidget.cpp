@@ -1,4 +1,4 @@
-#include "ocrbase.h"
+#include "ocrwidget.h"
 
 #include <QClipboard>
 #include <QCursor>
@@ -23,7 +23,7 @@
 #include <QSplitter>
 
 
-OcrBase::OcrBase(const QPixmap& capture, QWidget* parent)
+OcrWidget::OcrWidget(const QPixmap& capture, QWidget* parent)
     : QWidget(parent), m_pixmap(capture)
 {
     setWindowTitle(tr("OCR"));
@@ -47,12 +47,14 @@ OcrBase::OcrBase(const QPixmap& capture, QWidget* parent)
     m_zoomOutButton = new QPushButton("ZoomOut", this);
     m_translateButton = new QPushButton("translate", this);
 
-    connect(m_zoomInButton, &QPushButton::clicked, this, &OcrBase::zoomIn);
-    connect(m_zoomOutButton, &QPushButton::clicked, this, &OcrBase::zoomOut);
+    connect(m_zoomInButton, &QPushButton::clicked, this, &OcrWidget::zoomIn);
+    connect(m_zoomOutButton, &QPushButton::clicked, this, &OcrWidget::zoomOut);
     connect(m_translateButton,
             &QPushButton::clicked,
             this,
-            &OcrBase::translateText);
+            &OcrWidget::translateText);
+
+
     m_hLayout->addWidget(m_graphicsView);
     m_hLayout->addWidget(m_textEdit);
     m_btnLayout->addWidget(m_zoomInButton);
@@ -67,17 +69,17 @@ OcrBase::OcrBase(const QPixmap& capture, QWidget* parent)
 }
 
 
-void OcrBase::zoomIn()
+void OcrWidget::zoomIn()
 {
     m_graphicsView->scale(1.2, 1.2);
 }
 
-void OcrBase::zoomOut()
+void OcrWidget::zoomOut()
 {
     m_graphicsView->scale(1 / 1.2, 1 / 1.2);
 }
 
-void OcrBase::translateText()
+void OcrWidget::translateText()
 {
     // 这里调用翻译API来翻译OCR结果
 }

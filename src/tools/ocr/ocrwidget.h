@@ -10,12 +10,12 @@
 
 class QPushButton;
 
-class OcrBase : public QWidget
+class OcrWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit OcrBase(const QPixmap& capture, QWidget* parent = nullptr);
+    explicit OcrWidget(const QPixmap& capture, QWidget* parent = nullptr);
 
 private slots:
     void zoomIn();
