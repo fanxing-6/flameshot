@@ -429,7 +429,7 @@ void Flameshot::exportCapture(const QPixmap& capture,
         OcrServiceBase* ocrService =
             OcrServiceFactory::createOcrService(OcrServiceFactory::Huawei,
                                                 this);
-        ocrService->requestToken();
+        ocrService->requestOcr(capture);
 
         // OcrWidget* weiget = new OcrWidget(capture);
         // weiget->show();

@@ -22,16 +22,22 @@ public:
 signals:
     void tokenReceived(QString token);
     void tokenRequestFailed(QString errorMessage);
+    void ocrRequestFailed(QString errorMessage);
 
 private slots:
     void handleTokenResponse();
+    void handleOcrResponse();
+
     void onTokenRequestFailed(const QString errorMessage);
+    void onOcrRequestFailed(const QString errorMessage);
+    void performOcrRequest(const QPixmap pixmap);
 
 private:
-    QNetworkAccessManager m_networkManager;
+    QNetworkAccessManager* m_networkManager;
     QString m_currentToken;
     QDateTime m_tokenExpiryTime;
-    QNetworkReply* m_reply;
+    QNetworkReply* m_tokenReply;
+    QNetworkReply* m_OcrReply;
 
     void setToken(const QString& token);
 };

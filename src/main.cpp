@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // SPDX-FileCopyrightText: 2017-2019 Alejandro Sirgo Rica & Contributors
 
+
 #ifndef USE_EXTERNAL_SINGLEAPPLICATION
 #include "singleapplication.h"
 #else
