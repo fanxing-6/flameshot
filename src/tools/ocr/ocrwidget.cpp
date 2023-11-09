@@ -54,7 +54,6 @@ OcrWidget::OcrWidget(const QPixmap& capture, QWidget* parent)
             this,
             &OcrWidget::translateText);
 
-
     m_hLayout->addWidget(m_graphicsView);
     m_hLayout->addWidget(m_textEdit);
     m_btnLayout->addWidget(m_zoomInButton);
@@ -65,7 +64,6 @@ OcrWidget::OcrWidget(const QPixmap& capture, QWidget* parent)
     m_vLayout->addLayout(m_btnLayout);
 
     setLayout(m_vLayout);
-
 }
 
 

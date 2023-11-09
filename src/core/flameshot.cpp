@@ -426,14 +426,14 @@ void Flameshot::exportCapture(const QPixmap& capture,
     }
 
     if (tasks & CR::OCR) {
-        OcrServiceBase* ocrService =
-            OcrServiceFactory::createOcrService(OcrServiceFactory::Huawei,
-                                                this);
-        ocrService->requestOcr(capture);
+        // OcrServiceBase* ocrService =
+        //     OcrServiceFactory::createOcrService(OcrServiceFactory::Huawei,
+        //                                         this);
+        // ocrService->requestOcr(capture);
 
-        // OcrWidget* weiget = new OcrWidget(capture);
-        // weiget->show();
-        // weiget->activateWindow();
+        OcrWidget* weiget = new OcrWidget(capture);
+        weiget->show();
+        weiget->activateWindow();
     }
 
     if (!(tasks & CR::UPLOAD)) {
