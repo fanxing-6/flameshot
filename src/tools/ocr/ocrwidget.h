@@ -4,6 +4,7 @@
 #include <QUrl>
 #include <QWidget>
 #include <QObject>
+#include <QSplitter>
 #include <QTextEdit>
 #include <QVBoxLayout>
 
@@ -16,6 +17,9 @@ class OcrWidget : public QWidget
 
 public:
     explicit OcrWidget(const QPixmap& capture, QWidget* parent = nullptr);
+
+protected:
+    // void resizeEvent(QResizeEvent* event) override;
 
 private slots:
     void zoomIn();
@@ -33,5 +37,14 @@ private:
     QPushButton* m_zoomInButton;
     QPushButton* m_zoomOutButton;
     QPushButton* m_translateButton;
+    QSplitter* m_splitter;
+
+private:
+    void adjustPixmapItemSize();
+
+    void performOcr();
+
+protected:
+    void showEvent(QShowEvent* event) override;
 
 };
